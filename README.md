@@ -36,9 +36,15 @@ The workflow never publishes the new paper when validation fails.
 
 ## GitHub Pages
 
-Settings → Pages → Deploy from branch → `main` → `/ (root)`.
+Use GitHub Actions as the Pages publishing source because the daily paper workflow commits with `GITHUB_TOKEN`.
 
-Then open the Pages URL shown by GitHub.
+In GitHub:
+1. Open Settings → Pages.
+2. Under Build and deployment → Source, choose **GitHub Actions**.
+3. The `.github/workflows/pages.yml` workflow will deploy the latest `main` contents.
+4. After the first successful deployment, open the Pages URL shown by GitHub.
+
+GitHub documents that branch-based Pages builds are triggered by pushes to the publishing source, but commits made with `GITHUB_TOKEN` do not trigger a Pages build, which is why this repository uses the Actions deployment flow instead. 
 
 ## Important
 
