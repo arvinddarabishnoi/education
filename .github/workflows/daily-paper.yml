@@ -1,0 +1,51 @@
+name: Daily JEE Paper
+
+on:
+  schedule:
+    # 06:00 IST = 00:30 UTC
+    - cron: "30 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-jee-paper
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Generate, verify and save today's paper
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: gpt-5.6-luna
+        run: node scripts/generate-paper.mjs
+
+      - name: Show changed files
+        run: git status --short
+
+      - name: Commit and push
+        run: |
+          git config user.name "education-bot"
+          git config user.email "actions@users.noreply.github.com"
+
+          if git diff --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git add data/papers
+          git commit -m "Add JEE Daily Paper $(date -u +%F)"
+          git push
