@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="JEE Daily — timed JEE Main Paper 1 practice with instant results and solutions.">
+  <title>JEE Daily — Practice Arena</title>
+  <style>
+    :root{
+      --bg:#070b15;--panel:#0d1425;--panel2:#111a2e;--text:#eef4ff;--muted:#94a4bf;
+      --line:#23304a;--accent:#6ee7ff;--accent2:#a78bfa;--good:#55e6a5;--bad:#ff6b7a;
+      --warn:#ffd166;--shadow:0 22px 70px rgba(0,0,0,.35);--radius:20px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:
+      radial-gradient(900px 500px at 10% -10%,rgba(110,231,255,.12),transparent 60%),
+      radial-gradient(700px 420px at 90% 0%,rgba(167,139,250,.12),transparent 65%),var(--bg);
+      color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+    button,input{font:inherit}
+    button{cursor:pointer}
+    .app{min-height:100vh;display:flex;flex-direction:column}
+    .topbar{position:sticky;top:0;z-index:20;background:rgba(7,11,21,.82);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+    .topbar-inner{max-width:1400px;margin:auto;padding:14px 18px;display:flex;gap:16px;align-items:center;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand-mark{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#07101a;font-weight:900;box-shadow:0 0 30px rgba(110,231,255,.22)}
+    .brand h1{font-size:17px;margin:0;letter-spacing:.08em}
+    .brand small{display:block;color:var(--muted);margin-top:2px}
+    .top-actions{display:flex;align-items:center;gap:10px}
+    .select,.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:12px;padding:10px 13px}
+    .btn{transition:.18s transform,.18s border-color,.18s background}
+    .btn:hover{transform:translateY(-1px);border-color:#405271;background:var(--panel2)}
+    .btn.primary{border:0;background:linear-gradient(135deg,#65e7ff,#8b7cff);color:#08111f;font-weight:800}
+    .shell{width:min(1400px,100%);margin:auto;padding:20px 18px 32px;flex:1}
+    .notice{padding:14px 16px;border:1px solid var(--line);background:rgba(17,26,46,.75);border-radius:16px;color:var(--muted);margin-bottom:16px}
+    .hero{display:grid;grid-template-columns:1.35fr .65fr;gap:16px;margin-bottom:16px}
+    .hero-card,.stats-card,.panel{background:linear-gradient(180deg,rgba(17,26,46,.95),rgba(10,16,30,.95));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .hero-card{padding:26px}
+    .eyebrow{color:var(--accent);font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+    .hero-card h2{font-size:clamp(30px,5vw,56px);line-height:1.02;margin:10px 0}
+    .hero-card p{color:var(--muted);max-width:700px;line-height:1.6;margin:0 0 20px}
+    .hero-row{display:flex;gap:10px;flex-wrap:wrap}
+    .stats-card{padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .stat{padding:14px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.02)}
+    .stat b{display:block;font-size:23px}.stat span{color:var(--muted);font-size:12px}
+    .tabs{display:flex;gap:8px;overflow:auto;padding-bottom:6px;margin-bottom:12px}
+    .tab{white-space:nowrap;padding:10px 14px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--muted)}
+    .tab.active{background:rgba(110,231,255,.12);border-color:rgba(110,231,255,.35);color:var(--text)}
+    .exam{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px}
+    .question-panel{padding:22px}
+    .question-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:18px}
+    .q-number{font-size:13px;color:var(--accent);font-weight:900;letter-spacing:.08em}
+    .q-meta{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .badge{font-size:11px;padding:6px 9px;border-radius:999px;background:#17223a;border:1px solid var(--line);color:var(--muted)}
+    .question{font-size:18px;line-height:1.7}
+    .options{display:grid;gap:10px;margin-top:20px}
+    .option{position:relative}
+    .option input{position:absolute;opacity:0}
+    .option label{display:block;padding:16px;border:1px solid var(--line);background:#0c1322;border-radius:16px;transition:.16s;border-left:3px solid transparent}
+    .option input:checked+label{background:rgba(110,231,255,.09);border-color:rgba(110,231,255,.35);border-left-color:var(--accent)}
+    .option label:hover{border-color:#3a4b6d}
+    .numeric{margin-top:20px}
+    .numeric input{width:100%;padding:16px;border:1px solid var(--line);border-radius:16px;background:#0a1120;color:var(--text);outline:0}
+    .numeric input:focus{border-color:rgba(110,231,255,.55)}
+    .q-actions{display:flex;justify-content:space-between;gap:10px;margin-top:24px;flex-wrap:wrap}
+    .action-group{display:flex;gap:8px;flex-wrap:wrap}
+    .palette{padding:18px}
+    .palette-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .palette h3{margin:0;font-size:15px}.muted{color:var(--muted)}
+    .palette-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+    .dot{border:1px solid var(--line);background:#0b1220;color:var(--text);height:42px;border-radius:10px}
+    .dot.answered{background:rgba(85,230,165,.15);border-color:rgba(85,230,165,.35)}
+    .dot.review{background:rgba(255,209,102,.14);border-color:rgba(255,209,102,.38)}
+    .dot.current{outline:2px solid var(--accent);outline-offset:2px}
+    .legend{display:grid;gap:8px;margin-top:14px;font-size:12px;color:var(--muted)}
+    .legend span{display:flex;gap:8px;align-items:center}.legend i{width:10px;height:10px;border-radius:3px;display:inline-block;background:#0b1220;border:1px solid var(--line)}.legend i.a{background:rgba(85,230,165,.15);border-color:rgba(85,230,165,.35)}.legend i.r{background:rgba(255,209,102,.14);border-color:rgba(255,209,102,.38)}
+    .timer{font-variant-numeric:tabular-nums;color:var(--warn);font-weight:800}
+    .result{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .score-card{padding:24px}.score{font-size:56px;font-weight:900}
+    .result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:15px}
+    .review{margin-top:16px}.review-item{padding:18px;border:1px solid var(--line);border-radius:16px;margin-bottom:10px;background:#0a1120}.review-item.good{border-color:rgba(85,230,165,.3)}.review-item.bad{border-color:rgba(255,107,122,.3)}
+    .review-answer{margin-top:10px;color:var(--muted);line-height:1.6}.review-answer b{color:var(--text)}
+    .hidden{display:none!important}
+    .footer{max-width:1400px;margin:auto;padding:20px 18px 28px;color:#6f7f9a;font-size:12px}
+    .empty{padding:45px;text-align:center;color:var(--muted)}
+    @media(max-width:980px){.hero,.exam,.result{grid-template-columns:1fr}.stats-card{grid-template-columns:repeat(4,1fr)}}
+    @media(max-width:680px){
+      .topbar-inner{align-items:flex-start}.top-actions{flex-wrap:wrap;justify-content:flex-end}
+      .stats-card{grid-template-columns:1fr 1fr}.question-panel{padding:16px}.palette{padding:14px}
+      .hero-card{padding:20px}.question{font-size:16px}.result-grid{grid-template-columns:1fr}
+      .q-actions{flex-direction:column}.action-group{width:100%}.action-group .btn{flex:1}
+      .select{max-width:190px}
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark">J</div>
+        <div><h1>JEE DAILY</h1><small>Practice Arena</small></div>
+      </div>
+      <div class="top-actions">
+        <select id="paperSelect" class="select" aria-label="Select paper"></select>
+        <button id="resumeBtn" class="btn">Resume</button>
+        <button id="newAttemptBtn" class="btn">New Attempt</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section id="homeView">
+      <div class="hero">
+        <div class="hero-card">
+          <div class="eyebrow">JEE MAIN • PAPER 1</div>
+          <h2>Daily practice.<br>Exam discipline.</h2>
+          <p>Timed practice, question palette, marking for review, automatic scoring and complete solutions — built as an exam interface, not a content page.</p>
+          <div class="hero-row">
+            <button id="startBtn" class="btn primary">Start today's paper</button>
+            <button id="historyBtn" class="btn">Browse papers</button>
+          </div>
+        </div>
+        <div class="stats-card">
+          <div class="stat"><b id="paperCount">0</b><span>papers available</span></div>
+          <div class="stat"><b>75</b><span>questions</span></div>
+          <div class="stat"><b>180m</b><span>timer</span></div>
+          <div class="stat"><b>+4 / −1</b><span>marking</span></div>
+        </div>
+      </div>
+      <div class="notice">Practice only. Pattern/configuration is sourced from the repository config and should be checked against the latest official NTA bulletin before treating a paper as an exact official-format mock.</div>
+    </section>
+
+    <section id="examView" class="hidden">
+      <div class="tabs" id="subjectTabs"></div>
+      <div class="exam">
+        <div class="panel question-panel">
+          <div class="question-head">
+            <div>
+              <div class="q-number" id="qNumber"></div>
+              <div class="muted" id="qChapter"></div>
+            </div>
+            <div class="q-meta">
+              <span class="badge" id="qType"></span>
+              <span class="badge" id="qDifficulty"></span>
+              <span class="badge timer" id="timer">03:00:00</span>
+            </div>
+          </div>
+          <div class="question" id="questionText"></div>
+          <div class="options" id="options"></div>
+          <div class="numeric hidden" id="numericBox">
+            <input id="numericInput" inputmode="decimal" placeholder="Enter numerical answer">
+          </div>
+          <div class="q-actions">
+            <div class="action-group">
+              <button id="prevBtn" class="btn">← Previous</button>
+              <button id="nextBtn" class="btn primary">Next →</button>
+            </div>
+            <div class="action-group">
+              <button id="reviewBtn" class="btn">Mark for Review</button>
+              <button id="clearBtn" class="btn">Clear</button>
+              <button id="submitBtn" class="btn">Submit Paper</button>
+            </div>
+          </div>
+        </div>
+        <aside class="panel palette">
+          <div class="palette-head">
+            <h3>Question Palette</h3>
+            <span class="muted" id="progressText">0 / 75</span>
+          </div>
+          <div class="palette-grid" id="palette"></div>
+          <div class="legend">
+            <span><i class="a"></i> Answered</span>
+            <span><i class="r"></i> Marked for review</span>
+            <span><i></i> Not answered</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="resultView" class="hidden">
+      <div class="result">
+        <div class="panel score-card">
+          <div class="eyebrow">RESULT</div>
+          <div class="score" id="score"></div>
+          <div class="muted" id="resultSummary"></div>
+          <div class="result-grid">
+            <div class="stat"><b id="correctCount">0</b><span>correct</span></div>
+            <div class="stat"><b id="wrongCount">0</b><span>wrong</span></div>
+            <div class="stat"><b id="unattemptedCount">0</b><span>unattempted</span></div>
+          </div>
+        </div>
+        <div class="panel score-card">
+          <div class="eyebrow">SUBJECT BREAKDOWN</div>
+          <div id="subjectBreakdown" class="review-answer"></div>
+          <div style="margin-top:18px;display:flex;gap:8px;flex-wrap:wrap">
+            <button id="backHomeBtn" class="btn">Back Home</button>
+            <button id="reattemptBtn" class="btn primary">Reattempt</button>
+          </div>
+        </div>
+      </div>
+      <div class="review">
+        <div class="panel score-card">
+          <div class="eyebrow">SOLUTIONS</div>
+          <div id="solutionList"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">JEE Daily • A practice platform • Questions are generated and validated by the repository automation pipeline.</footer>
+</div>
+
+<script>
+(() => {
+  const state = {
+    papers: [],
+    paper: null,
+    answers: {},
+    review: new Set(),
+    subject: "All",
+    index: 0,
+    remaining: 180 * 60,
+    timerHandle: null,
+    mode: "home"
+  };
+
+  const $ = (id) => document.getElementById(id);
+  const subjectOrder = ["All", "Physics", "Chemistry", "Mathematics"];
+
+  function safeId(value) {
+    return String(value).replace(/[^a-zA-Z0-9_-]/g, "_");
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function questions() {
+    if (!state.paper) return [];
+    if (state.subject === "All") return state.paper.questions;
+    return state.paper.questions.filter(q => q.subject === state.subject);
+  }
+
+  function currentQuestion() {
+    const qs = questions();
+    return qs[state.index] || qs[0];
+  }
+
+  function saveKey() {
+    return state.paper ? "jee-daily:" + state.paper.id : "";
+  }
+
+  function save() {
+    if (!state.paper) return;
+    try {
+      localStorage.setItem(saveKey(), JSON.stringify({
+        answers: state.answers,
+        review: [...state.review],
+        index: state.index,
+        subject: state.subject,
+        remaining: state.remaining
+      }));
+    } catch {}
+  }
+
+  function restore() {
+    try {
+      const raw = localStorage.getItem(saveKey());
+      if (!raw) return false;
+      const data = JSON.parse(raw);
+      state.answers = data.answers || {};
+      state.review = new Set(data.review || []);
+      state.index = Number.isInteger(data.index) ? data.index : 0;
+      state.subject = subjectOrder.includes(data.subject) ? data.subject : "All";
+      state.remaining = Number.isFinite(data.remaining) ? data.remaining : 180 * 60;
+      return true;
+    } catch { return false; }
+  }
+
+  function formatTime(total) {
+    const s = Math.max(0, total|0);
+    const h = Math.floor(s/3600).toString().padStart(2,"0");
+    const m = Math.floor((s%3600)/60).toString().padStart(2,"0");
+    const sec = (s%60).toString().padStart(2,"0");
+    return `${h}:${m}:${sec}`;
+  }
+
+  function renderTabs() {
+    $("subjectTabs").innerHTML = subjectOrder.map(s =>
+      `<button class="tab ${state.subject===s ? "active":""}" data-subject="${s}">${s}</button>`
+    ).join("");
+    document.querySelectorAll(".tab").forEach(btn => {
+      btn.onclick = () => {
+        state.subject = btn.dataset.subject;
+        state.index = 0;
+        render();
+        save();
+      };
+    });
+  }
+
+  function renderPalette() {
+    const qs = questions();
+    const answered = Object.keys(state.answers).length;
+    $("progressText").textContent = `${answered} / 75`;
+    $("palette").innerHTML = qs.map((q, i) => {
+      const a = state.answers[q.id];
+      const classes = [
+        "dot",
+        a !== undefined && a !== "" ? "answered" : "",
+        state.review.has(q.id) ? "review" : "",
+        i === state.index ? "current" : ""
+      ].filter(Boolean).join(" ");
+      return `<button class="${classes}" data-index="${i}" aria-label="Question ${q.number}">${q.number}</button>`;
+    }).join("");
+    document.querySelectorAll(".dot").forEach(btn => {
+      btn.onclick = () => { state.index = Number(btn.dataset.index); renderQuestion(); save(); };
+    });
+  }
+
+  function renderQuestion() {
+    const q = currentQuestion();
+    if (!q) return;
+    $("qNumber").textContent = `QUESTION ${q.number} • ${q.subject}`;
+    $("qChapter").textContent = q.chapter || "";
+    $("qType").textContent = q.type === "mcq" ? "MCQ" : "NUMERICAL";
+    $("qDifficulty").textContent = q.difficulty || "";
+    $("timer").textContent = formatTime(state.remaining);
+    $("questionText").innerHTML = escapeHtml(q.question).replace(/\n/g,"<br>");
+    $("options").innerHTML = "";
+    $("numericBox").classList.add("hidden");
+
+    if (q.type === "mcq") {
+      $("options").innerHTML = q.options.map((opt, i) => {
+        const letter = String.fromCharCode(65 + i);
+        const checked = state.answers[q.id] === letter ? "checked" : "";
+        return `<div class="option">
+          <input type="radio" name="q-${safeId(q.id)}" id="${safeId(q.id)}-${letter}" value="${letter}" ${checked}>
+          <label for="${safeId(q.id)}-${letter}"><b>${letter}.</b> ${escapeHtml(opt)}</label>
+        </div>`;
+      }).join("");
+      $("options").querySelectorAll("input").forEach(input => {
+        input.onchange = () => { state.answers[q.id] = input.value; save(); renderPalette(); };
+      });
+    } else {
+      $("numericBox").classList.remove("hidden");
+      $("numericInput").value = state.answers[q.id] ?? "";
+      $("numericInput").oninput = () => { state.answers[q.id] = $("numericInput").value; save(); renderPalette(); };
+      setTimeout(() => $("numericInput").focus(), 0);
+    }
+
+    $("reviewBtn").textContent = state.review.has(q.id) ? "Unmark Review" : "Mark for Review";
+    $("prevBtn").disabled = state.index <= 0;
+    $("nextBtn").disabled = state.index >= questions().length - 1;
+  }
+
+  function render() {
+    renderTabs(); renderQuestion(); renderPalette();
+  }
+
+  function tick() {
+    if (state.mode !== "exam") return;
+    state.remaining -= 1;
+    $("timer").textContent = formatTime(state.remaining);
+    if (state.remaining <= 0) submit(true);
+  }
+
+  function startTimer() {
+    clearInterval(state.timerHandle);
+    state.timerHandle = setInterval(tick, 1000);
+  }
+
+  async function loadPaper(entry) {
+    const response = await fetch(entry.path, { cache:"no-store" });
+    if (!response.ok) throw new Error("Unable to load selected paper.");
+    state.paper = await response.json();
+    state.answers = {};
+    state.review = new Set();
+    state.subject = "All";
+    state.index = 0;
+    state.remaining = Number(state.paper.durationMinutes || 180) * 60;
+    restore();
+    $("homeView").classList.add("hidden");
+    $("resultView").classList.add("hidden");
+    $("examView").classList.remove("hidden");
+    state.mode = "exam";
+    startTimer();
+    render();
+  }
+
+  async function submit(auto=false) {
+    if (!state.paper) return;
+    clearInterval(state.timerHandle);
+    state.mode = "result";
+    const qs = state.paper.questions || [];
+    let score=0, correct=0, wrong=0, blank=0;
+    const bySubject = {};
+    for (const s of ["Physics","Chemistry","Mathematics"]) bySubject[s] = {correct:0,wrong:0,blank:0,score:0};
+    for (const q of qs) {
+      const user = state.answers[q.id];
+      const empty = user === undefined || String(user).trim() === "";
+      if (empty) {
+        blank++;
+        bySubject[q.subject].blank++;
+        continue;
+      }
+      let ok=false;
+      if (q.type === "mcq") ok = user === q.answer;
+      else {
+        const a = Number(user), b = Number(q.answer);
+        ok = Number.isFinite(a) && Number.isFinite(b) && Math.abs(a-b) <= 1e-6;
+      }
+      if (ok) {
+        correct++; score += 4; bySubject[q.subject].correct++; bySubject[q.subject].score += 4;
+      } else {
+        wrong++; score -= 1; bySubject[q.subject].wrong++; bySubject[q.subject].score -= 1;
+      }
+    }
+    $("score").textContent = score;
+    $("resultSummary").textContent = auto ? "Time ended — paper submitted automatically." : `${state.paper.title}`;
+    $("correctCount").textContent = correct;
+    $("wrongCount").textContent = wrong;
+    $("unattemptedCount").textContent = blank;
+    $("subjectBreakdown").innerHTML = Object.entries(bySubject).map(([s,v]) =>
+      `<div style="padding:10px 0;border-bottom:1px solid #23304a"><b>${s}</b><br><span class="muted">${v.correct} correct • ${v.wrong} wrong • ${v.blank} blank • ${v.score} marks</span></div>`
+    ).join("");
+    $("solutionList").innerHTML = qs.map(q => {
+      const user = state.answers[q.id];
+      const correctAnswer = q.type === "mcq" ? q.answer : q.answer;
+      const ok = q.type === "mcq" ? user === q.answer : (Number.isFinite(Number(user)) && Math.abs(Number(user)-Number(q.answer)) <= 1e-6);
+      const empty = user === undefined || String(user).trim() === "";
+      return `<div class="review-item ${ok ? "good" : "bad"}">
+        <b>Q${q.number}. ${escapeHtml(q.subject)} • ${escapeHtml(q.chapter || "")}</b>
+        <div style="margin-top:8px;line-height:1.6">${escapeHtml(q.question).replace(/\n/g,"<br>")}</div>
+        <div class="review-answer"><b>Your answer:</b> ${empty ? "Not attempted" : escapeHtml(user)}
+        <br><b>Correct answer:</b> ${escapeHtml(correctAnswer)}
+        <br><b>Solution:</b><br>${escapeHtml(q.solution).replace(/\n/g,"<br>")}</div>
+      </div>`;
+    }).join("");
+    $("examView").classList.add("hidden");
+    $("resultView").classList.remove("hidden");
+    try { localStorage.setItem(saveKey()+":completed", "1"); } catch {}
+  }
+
+  function goHome() {
+    clearInterval(state.timerHandle);
+    state.mode = "home";
+    $("examView").classList.add("hidden");
+    $("resultView").classList.add("hidden");
+    $("homeView").classList.remove("hidden");
+  }
+
+  async function boot() {
+    try {
+      const response = await fetch("data/papers/index.json", { cache:"no-store" });
+      if (!response.ok) throw new Error("Paper index is not available yet.");
+      const data = await response.json();
+      state.papers = data.papers || [];
+      $("paperCount").textContent = state.papers.length;
+      $("paperSelect").innerHTML = state.papers.length
+        ? state.papers.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.date)} — ${escapeHtml(p.title)}</option>`).join("")
+        : '<option>No papers yet</option>';
+
+      const latest = state.papers[0];
+      if (!latest) return;
+
+      $("startBtn").onclick = () => loadPaper(latest).catch(e => alert(e.message));
+      $("historyBtn").onclick = () => $("paperSelect").focus();
+      $("paperSelect").onchange = () => {
+        const chosen = state.papers.find(p => p.id === $("paperSelect").value);
+        if (chosen) loadPaper(chosen).catch(e => alert(e.message));
+      };
+      $("resumeBtn").onclick = () => loadPaper(latest).catch(e => alert(e.message));
+      $("newAttemptBtn").onclick = () => {
+        try { localStorage.removeItem("jee-daily:"+latest.id); } catch {}
+        loadPaper(latest).catch(e => alert(e.message));
+      };
+      $("prevBtn").onclick = () => { if (state.index > 0) { state.index--; render(); save(); } };
+      $("nextBtn").onclick = () => { if (state.index < questions().length-1) { state.index++; render(); save(); } };
+      $("reviewBtn").onclick = () => {
+        const q=currentQuestion();
+        if (!q) return;
+        if (state.review.has(q.id)) state.review.delete(q.id); else state.review.add(q.id);
+        renderQuestion(); renderPalette(); save();
+      };
+      $("clearBtn").onclick = () => {
+        const q=currentQuestion();
+        if (!q) return;
+        delete state.answers[q.id];
+        renderQuestion(); renderPalette(); save();
+      };
+      $("submitBtn").onclick = () => submit(false);
+      $("backHomeBtn").onclick = goHome;
+      $("reattemptBtn").onclick = () => loadPaper(state.paper).catch(e => alert(e.message));
+
+      document.addEventListener("keydown", (event) => {
+        if (state.mode !== "exam") return;
+        if (event.key === "ArrowLeft") $("prevBtn").click();
+        if (event.key === "ArrowRight") $("nextBtn").click();
+        if (event.key === "Escape") goHome();
+      });
+    } catch (e) {
+      $("homeView").innerHTML = `<div class="panel empty"><h2>No paper published yet</h2><p>${escapeHtml(e.message)}</p><p>The daily GitHub workflow will populate this page once the first validated paper is generated.</p></div>`;
+    }
+  }
+
+  boot();
+})();
+</script>
+</body>
+</html>
