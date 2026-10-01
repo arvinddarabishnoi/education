@@ -1,0 +1,20 @@
+{
+  "exam": "JEE Main Paper 1 (B.E./B.Tech.)",
+  "year": 2026,
+  "durationMinutes": 180,
+  "totalQuestions": 75,
+  "subjects": {
+    "Physics": { "questions": 25, "mcq": 20, "numerical": 5 },
+    "Chemistry": { "questions": 25, "mcq": 20, "numerical": 5 },
+    "Mathematics": { "questions": 25, "mcq": 20, "numerical": 5 }
+  },
+  "marking": {
+    "correct": 4,
+    "incorrect": -1,
+    "unattempted": 0
+  },
+  "sources": [
+    "https://jeemain.nta.nic.in/information-bulletin/",
+    "https://jeemain.nta.nic.in/document/ib-2026/"
+  ]
+}
