@@ -6,6 +6,8 @@
   <meta name="theme-color" content="#0b1020">
   <meta name="description" content="JEE Daily — timed JEE Main Paper 1 practice with instant results and solutions.">
   <title>JEE Daily — Practice Arena</title>
+  <script>window.MathJax={tex:{inlineMath:[["$","$"],["\\\\(","\\\\)"]],displayMath:[["$","$"],["\\\\[","\\\\]"]]},svg:{fontCache:"global"}};</script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
   <style>
     :root{
       --bg:#070b15;--panel:#0d1425;--panel2:#111a2e;--text:#eef4ff;--muted:#94a4bf;
@@ -316,6 +318,7 @@
       ].filter(Boolean).join(" ");
       return `<button class="${classes}" data-index="${i}" aria-label="Question ${q.number}">${q.number}</button>`;
     }).join("");
+    if (window.MathJax?.typesetPromise) window.MathJax.typesetPromise([$("questionText")]).catch(()=>{});
     document.querySelectorAll(".dot").forEach(btn => {
       btn.onclick = () => { state.index = Number(btn.dataset.index); renderQuestion(); save(); };
     });
