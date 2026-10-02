@@ -39,7 +39,7 @@ function normalize(s) {
   return String(s || "")
     .toLowerCase()
     .replace(/\\([^)]*\\)/g, "")
-    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/[^\\p{L}\\p{N}\s]/gu, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -239,7 +239,7 @@ const blueprint = Object.entries(config.subjects)
 
 const generationInstructions = `You are a senior JEE test setter and rigorous academic editor.
 
-Create a fresh JEE Main Paper 1 practice paper for 2026. This is a serious exam-preparation product, not casual trivia.
+Create a fresh JEE Main Paper 1 practice paper for 2026 in Hindi medium. This is a serious exam-preparation product, not casual trivia.
 
 Follow this blueprint exactly:
 ${blueprint}
@@ -253,6 +253,9 @@ Global requirements:
 - Ensure options are plausible and exactly one MCQ option is correct.
 - Numerical answers must be deterministic and gradeable as a number.
 - Every question must have a complete, independently checkable solution.
+- Use Hindi (Devanagari) for all user-facing natural-language content: title, subtitle, instructions, chapter names, questions, options and solutions.
+- Keep the schema-required subject labels exactly as Physics, Chemistry and Mathematics.
+- Standard scientific/technical terms may include the familiar English term in parentheses when that improves clarity, but the primary wording must remain Hindi.
 - Use LaTeX notation for mathematics/physics/chemistry where useful.
 - Avoid ambiguous wording and missing data.
 - Units, signs, constants and domains must be explicit whenever needed.
@@ -475,8 +478,8 @@ const output = {
   exam: config.exam,
   durationMinutes: config.durationMinutes,
   marking: config.marking,
-  title: finalPaper.title || `JEE Daily Paper — ${date}`,
-  subtitle: finalPaper.subtitle || "JEE Main Paper 1 style practice set",
+  title: finalPaper.title || `दैनिक JEE मुख्य परीक्षा अभ्यास पत्र — ${date}`,
+  subtitle: finalPaper.subtitle || "JEE Main Paper 1 शैली का हिंदी अभ्यास पत्र",
   instructions: finalPaper.instructions || [],
   questions: normalizedQuestions,
   sourcePolicy: "Generated against the repository's configured 2026 JEE Main Paper 1 pattern. Verify against the latest NTA bulletin before using as an official-format mock."
