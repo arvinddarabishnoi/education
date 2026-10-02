@@ -2,8 +2,8 @@ name: Daily JEE Paper
 
 on:
   schedule:
-    # 06:00 IST = 00:30 UTC
-    - cron: "30 0 * * *"
+    # 16:40 IST = 11:10 UTC
+    - cron: "10 11 * * *"
   workflow_dispatch:
 
 permissions:
