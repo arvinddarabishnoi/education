@@ -13,7 +13,7 @@ A browser-based JEE Main Paper 1 practice platform with automated daily paper ge
 
 ## Daily automation
 
-The GitHub Action runs every day at 00:30 UTC (06:00 IST), and can also be run manually.
+The GitHub Action runs every day at 11:10 UTC (16:40 IST), and can also be run manually.
 
 Before the first run, add this repository secret:
 
@@ -23,7 +23,7 @@ GitHub:
 Settings → Secrets and variables → Actions → New repository secret.
 
 The workflow:
-1. Generates a new 75-question paper.
+1. Generates a new 75-question Hindi-medium 75-question paper.
 2. Runs deterministic structural/duplication checks.
 3. Runs an independent AI quality-control pass.
 4. Repairs QC failures once.
